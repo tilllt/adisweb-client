@@ -15,6 +15,7 @@ from typing import Iterable
 import requests
 from bs4 import BeautifulSoup
 
+from .account import AccountMixin
 from .exceptions import NoResultsError, NotReachableError, OpacError, SearchError
 from .libraries import LibraryConfig
 from .models import (
@@ -50,13 +51,43 @@ def _attr(el, name: str, default: str = "") -> str:
 _FREE_SEARCH = "FELD01_1"
 
 
-class AdisClient:
+class AdisClient(AccountMixin):
     """Stateful client for one aDISWeb library (one instance = one session)."""
 
     @classmethod
     def from_config(cls, cfg: dict, timeout: float = 30.0) -> "AdisClient":
         """Build a client from a raw config dict (name/baseurl/startparams)."""
         return cls(LibraryConfig(**cfg), timeout=timeout)
+
+    @classmethod
+    def with_session_cookies(cls, library: LibraryConfig, cookies: list[dict],
+                             timeout: float = 30.0) -> "AdisClient":
+        """Build a client that authenticates via exported browser session
+        cookies (VÖBB OIDC callback is WAF-protected against non-browser
+        clients; the aDISWeb API itself accepts browser session cookies).
+
+        cookies: list of {name, value, domain, path, secure, httpOnly}.
+        """
+        client = cls(library, timeout=timeout)
+        client._cookie_session = True
+        for c in cookies:
+            client._session.cookies.set(
+                c["name"], c["value"],
+                domain=c.get("domain", ""),
+                path=c.get("path", "/"),
+                secure=c.get("secure", False),
+            )
+        return client
+
+    @classmethod
+    def from_cookie_file(cls, library: LibraryConfig, path: str,
+                         timeout: float = 30.0) -> "AdisClient":
+        import json
+
+        from pathlib import Path
+
+        cookies = json.loads(Path(path).read_text(encoding="utf-8"))
+        return cls.with_session_cookies(library, cookies, timeout=timeout)
 
     def __init__(self, library: LibraryConfig, timeout: float = 30.0):
         self.library = library
@@ -82,6 +113,11 @@ class AdisClient:
         self.s_previous_button = "$Toolbar_4"
         self.s_reusedoc: BeautifulSoup | None = None
         self._advanced_search_form_body: list[tuple[str, str]] | None = None
+        self._account_form_oldstyle: bool = False
+        self._account_form_body: list[tuple[str, str]] | None = None
+        self._cookie_session: bool = False
+        self._last_doc: BeautifulSoup | None = None
+        self._session_sid: str = ""
 
     # ------------------------------------------------------------------ HTTP
 
@@ -107,9 +143,10 @@ class AdisClient:
         self._session._last_response = resp  # type: ignore[attr-defined]
         return resp.text
 
-    def _post(self, url: str, data: list[tuple[str, str]]) -> str:
+    def _post(self, url: str, data: list[tuple[str, str]], referer: str | None = None) -> str:
         try:
-            resp = self._session.post(url, data=data, timeout=self.timeout)
+            headers = {"Referer": referer} if referer else {}
+            resp = self._session.post(url, data=data, timeout=self.timeout, headers=headers)
             resp.raise_for_status()
         except requests.RequestException as e:
             raise NotReachableError(f"POST failed: {url}: {e}") from e
@@ -123,14 +160,17 @@ class AdisClient:
         """GET + parse; keeps requestCount in sync with the OPAC."""
         doc = self._parse(self._fetch(self._request_count_query(url)))
         self._update_request_count(doc)
+        self.s_reusedoc = doc  # latest page is the form-state base for next POST
         return doc
 
-    def html_post(self, url: str, data: list[tuple[str, str]]) -> BeautifulSoup:
+    def html_post(self, url: str, data: list[tuple[str, str]],
+                  referer: str | None = None) -> BeautifulSoup:
         data = list(data)
         if not any(n == "requestCount" for n, _ in data):
             data.append(("requestCount", str(self.s_request_count)))
-        doc = self._parse(self._post(url, data))
+        doc = self._parse(self._post(url, data, referer=referer))
         self._update_request_count(doc)
+        self.s_reusedoc = doc  # latest page is the form-state base for next POST
         return doc
 
     def _update_request_count(self, doc: BeautifulSoup) -> None:
@@ -140,12 +180,22 @@ class AdisClient:
                 self.s_request_count = int(m.group(1))
 
     def _opac_url(self) -> str:
-        """Base URL for stateful requests: form-action path (with or without
-        session token) on the final start-page origin, or classic
-        ;jsessionid= form (legacy Adis.java model)."""
+        """Base URL for stateful requests: post-login session, form-action
+        path (with or without session token), or classic ;jsessionid= form."""
+        if self._session_sid:
+            return f"https://{self._netloc}/aDISWeb/_{self._session_sid}/app"
         if self.s_app_path is not None:
             origin = self._origin or f"https://{self._netloc}"
             return f"{origin}{self.s_app_path}"
+        if self._cookie_session:
+            # browser-cookie session: the _sid cookie carries the session token
+            sid = ""
+            for c in self._session.cookies:
+                if c.name == "_sid":
+                    sid = c.value
+                    break
+            if sid:
+                return f"https://{self._netloc}/aDISWeb/_{sid}/app"
         return f"{self.library.baseurl};jsessionid={self.s_sid}"
 
     @property
@@ -205,6 +255,15 @@ class AdisClient:
             for a in doc.select("#unav li a, #hnav li a, .tree_ul li a")
         )
         self.update_pageform(doc)
+
+        # account form body (used by login when not oldstyle): page form +
+        # the hidden "BK" script button
+        if not self._account_form_oldstyle:
+            self._account_form_body = list(self.s_pageform) + [
+                ("$ScriptButton_hidden", "BK")
+            ]
+        else:
+            self._account_form_body = None
 
         if (self.s_exts is None and doc.select_one("input.search-adv")
                 and not doc.select_one('input[name="$Autosuggest"]')):
@@ -487,22 +546,83 @@ class AdisClient:
     # ------------------------------------------------------------------ detail
 
     def get_result_by_id(self, id: str) -> DetailedItem:
-        """Fetch the detail view for a record id (port of getResultById)."""
+        """Fetch the detail view for a record id.
+
+        current-generation aDISWeb (VÖBB): the record is opened by POSTing
+        ``selected=ZTEXT AK<id>`` with the form state of the most recent page
+        (identity/requestCount must stay in sync — reuse the last document).
+        """
         if id.startswith("http"):
             return self.parse_result(id, self.html_get(id))
 
-        if "!" in id:
-            page, id = id.split("!", 1)
-            self.search_get_page(int(page))
-
-        nvpairs = [(n, v) for n, v in self.s_pageform
-                   if "$Toolbar_" not in n and "selected" not in n]
-        nvpairs.append(("selected", f"ZTEXT       {id}"))
-        # aDISWeb quirk: the identical POST must be sent twice
-        doc = self.html_post(self._opac_url(), nvpairs)
-        doc = self.html_post(self._opac_url(), nvpairs)
+        base = self.s_reusedoc or self._start_doc
+        nvpairs = self._detail_payload(base, id)
+        doc = self.html_post(self._opac_url(), nvpairs, referer=self._opac_url())
         self.s_reusedoc = doc
         return self.parse_result(id, doc)
+
+    def _detail_payload(self, base: BeautifulSoup, record_id: str) -> list[tuple[str, str]]:
+        """Form payload that opens a record detail view (current-gen).
+
+        Mirrors the browser click: hidden inputs of the current page plus
+        scriptEnabled/overrideScrollPos/$Select/$Tab, requestCount from the
+        current page, and selected=ZTEXT AK<id>.
+        """
+        data: dict[str, str] = {}
+        for inp in base.select('input[type="hidden"]'):
+            n = str(inp.get("name") or "")
+            if n:
+                data[n] = str(inp.get("value") or "")
+        data["scriptEnabled"] = "true"
+        data["overrideScrollPos"] = "0"
+        auto = base.select_one('input[name="$Autosuggest"]')
+        data["$Autosuggest"] = str(auto.get("value") or "") if auto else ""
+        sel = base.select_one('select[name="$Select"]')
+        data["$Select"] = str(sel.get("value") or "Überall suchen") if sel else "Überall suchen"
+        data["$Tab"] = "0"
+        rc = base.select_one('input[name="requestCount"]')
+        data["requestCount"] = str(rc.get("value") or "0") if rc else "0"
+        # record ids from search hits may already carry the AK- or SAK-
+        # prefix; the detail POST expects exactly one AK-prefixed key
+        rid = record_id
+        for prefix in ("AK", "SAK"):
+            if rid.startswith(prefix):
+                rid = rid[len(prefix):]
+                break
+        data["selected"] = f"ZTEXT       AK{rid}"
+        return [(k, v) for k, v in data.items()]
+
+    def get_availability_by_query(self, query: str, branch_filter: str | None = None,
+                                  area: str = "Bibliotheksbestand") -> list[dict]:
+        """Search ``query`` and return per-record copy availability.
+
+        Runs search + detail fetches in ONE session (aDISWeb form state —
+        identity/requestCount — is session-bound; separate sessions break it).
+        ``branch_filter``: substring matched (case-insensitive) against the
+        library/branch name; None returns all branches.
+        """
+        res = self.search_simple(query, area=area)
+        out = []
+        for r in res.results:
+            try:
+                detail = self.get_result_by_id(r.id)
+            except OpacError:
+                continue
+            copies = []
+            for c in detail.copies:
+                if branch_filter and branch_filter.lower() not in c.branch.lower():
+                    continue
+                copies.append({
+                    "branch": c.branch, "location": c.location,
+                    "signature": c.signature, "status": c.status,
+                    "return_date": c.return_date.isoformat() if c.return_date else None,
+                })
+            out.append({
+                "id": r.id,
+                "title": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", r.innerhtml)).strip(),
+                "copies": copies,
+            })
+        return out
 
     def parse_result(self, id: str, doc: BeautifulSoup) -> DetailedItem:
         """Parse the detail view (port of Adis.java parseResult)."""
@@ -584,11 +704,20 @@ class AdisClient:
                             copy.status = (copy.status + " - " if copy.status else "") + \
                                 text.split("-")[0].strip()
                             try:
+                                raw = text.split(": ", 1)[1].strip()
                                 copy.return_date = _dt.datetime.strptime(
-                                    text.split(": ", 1)[1].strip(), "%d.%m.%Y"
-                                ).date()
+                                    raw, "%d.%m.%Y"
+                                ).date() if "." in raw else None
                             except (ValueError, IndexError):
-                                pass
+                                # tolerate 1.9.2026 (no zero padding)
+                                m = re.search(r"(\d{1,2})\.(\d{1,2})\.(\d{4})", text)
+                                if m:
+                                    try:
+                                        copy.return_date = _dt.date(
+                                            int(m.group(3)), int(m.group(2)), int(m.group(1))
+                                        )
+                                    except ValueError:
+                                        pass
                         else:
                             copy.status = (copy.status + " - " if copy.status else "") + text
                     else:
