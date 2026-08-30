@@ -159,6 +159,7 @@ class AccountMixin:
         _cookie_session: bool
         _session_sid: str
         _last_doc: BeautifulSoup | None
+        _start_doc: BeautifulSoup | None
         library: "LibraryConfig"
         timeout: float
         s_service: str | None
@@ -173,7 +174,8 @@ class AccountMixin:
         def _sp_params(self, override_second: str | None = None) -> str: ...
         def _form_payload(self, doc: BeautifulSoup) -> list[tuple[str, str]]: ...
         def html_get(self, url: str) -> BeautifulSoup: ...
-        def html_post(self, url: str, data: list[tuple[str, str]]) -> BeautifulSoup: ...
+        def html_post(self, url: str, data: list[tuple[str, str]],
+                      referer: str | None = None) -> BeautifulSoup: ...
         def _start(self) -> None: ...
         def get_result_by_id(self, id: str) -> "DetailedItem": ...
 
@@ -548,79 +550,212 @@ class AccountMixin:
 
     def reserve(self, record_id_or_url: str, account: Account,
                 pickup_branch: str | None = None,
-                confirm: bool = False) -> AccountResult:
-        """Place a reservation on a record (modern VÖBB flow).
+                express: bool = False,
+                notify: bool = True,
+                confirm: bool = False,
+                max_fee: float | None = None) -> AccountResult:
+        """Place a reservation / order (modern VÖBB flow, verified live).
 
-        pickup_branch: select an "Abholort" option (the library the item is
-        delivered to) if the form asks for it. confirm: acknowledge a fee
-        warning (kostenpflichtig).
+        Flow (mirrors the browser exactly):
+          login → search by record id → detail (selected=ZTEXT AK<id>) →
+          press "Bestellen/Vormerken" ($Button$1) → order page: choose
+          pickup branch ($Select) + Expressbestellung ($Checkbox) +
+          notification ($Select$0) → "Weiter" → confirmation page shows the
+          cost ("Bei Bereitstellung entstehen Ihnen Gebühren …"/"Transport
+          kostet …") → final submit via "kostenpflichtig bestellen /
+          vormerken" ($Button).
+
+        Args:
+            record_id_or_url: detail URL or record id (AK…/SAK…/plain).
+            pickup_branch: branch name shown in the order form's $Select
+                (e.g. "Friedrichshain-Kreuzberg: Familienbibliothek Else
+                Ury"); None keeps the default.
+            express: check "Expressbestellung" (may incur transport fees).
+            notify: "Benachrichtigung bei Bereitstellung" (Ja/Nein).
+            confirm: must be True to submit the cost-bearing final button;
+                otherwise the cost warning is returned without ordering.
+            max_fee: if set, the order is refused when the quoted cost
+                exceeds this amount (even with confirm=True).
         """
-        # login first (modern OIDC flow; no-op for cookie sessions)
+        # login first (modern OIDC flow; no-op for cookie sessions).
+        # NOTE: do NOT call _start() here — it bootstraps a separate
+        # session and the subsequent login would create a second one
+        # (VÖBB rejects that: "Bitte schließen Sie diesen Reiter").
         if not self._cookie_session and not self._session_sid:
-            self._start()
             self.login(account)
 
-        # load the detail page to find the reservation button
-        detail_doc = self.html_get(self._detail_url(record_id_or_url))
+        rid = self._record_id(record_id_or_url)
+
+        # detail page: search by the bare id (yields a result list whose form
+        # state opens the detail view; the overview page's state does not)
+        base_doc = self._last_doc or self._start_doc
+        assert base_doc is not None
+        nv = _all_form_inputs(base_doc)
+        for i, (n, v) in enumerate(nv):
+            if n == "$Autosuggest":
+                nv[i] = (n, rid)
+            if n == "$Select":
+                nv[i] = (n, "Bibliotheksbestand")
+        nv.append(("$Button", "Suchen"))
+        treffer = self.html_post(self._opac_url(), nv)
+        self._last_doc = treffer
+        if treffer.select_one('a[href*="sp=SAK"]') is None:
+            return AccountResult(False, f"Titel '{rid}' nicht gefunden")
+
+        detail_doc = self._open_detail(rid)
         self._last_doc = detail_doc
-        if detail_doc.select_one("input[value*=Reservieren], "
-                                 "input[value*=Vormerken], "
-                                 "input[value*=Einzelbestellung]") is None:
-            # not directly reservable from this view — try the record page
-            detail = self.get_result_by_id(record_id_or_url)
-            if not detail.reservable or not detail.reservation_info:
-                return AccountResult(False, "Titel ist nicht reservierbar")
 
-        # press the reservation button (Reservieren/Vormerken/Einzelbestellung)
-        form = _all_form_inputs(detail_doc, include_submit_values=(
-            "Reservieren", "Einzelbestellung", "Vormerken"))
-        if not any(v in ("Reservieren", "Einzelbestellung", "Vormerken")
-                   for _, v in form):
-            return AccountResult(False, "Kein Reservieren-Button auf der Detailseite gefunden")
-        doc = self.html_post(self._opac_url(), form)
-        self._last_doc = doc
+        # press "Bestellen/Vormerken"
+        btn = detail_doc.select_one('input[name="$Button$1"], input[value*="Bestellen/Vormerken"]')
+        if btn is None:
+            return AccountResult(False, "Kein Bestellen/Vormerken-Button auf der Detailseite gefunden")
+        order_doc = self._browser_post(detail_doc, extra={"$Button$1": "Bestellen/Vormerken"})
+        self._last_doc = order_doc
+        body = order_doc.get_text(" ", strip=True)
+        if "Bestellvorgang" not in body and "Bestellung" not in body:
+            return AccountResult(False, "Bestellseite nicht erreicht",
+                                 details=[body[:200]])
 
-        # possible login form (legacy)
-        if doc.select_one("#LPASSW_1") is not None:
-            try:
-                doc = self._handle_login_form(doc, account)
-            except OpacError as e:
-                return AccountResult(False, str(e))
-            self._last_doc = doc
-
-        # pickup branch selection (delivery library) — #AUSGAB_1
-        if doc.select_one("#AUSGAB_1") is not None:
-            sel = doc.select_one("#AUSGAB_1")
+        # order page: pickup branch + express + notification → Weiter
+        sel = order_doc.select_one('select[name="$Select"]')
+        branch_val = None
+        if sel is not None:
             opts = [o for o in sel.select("option") if o.get_text().strip()]
-            if not pickup_branch and len(opts) > 0:
-                pickup_branch = str(opts[0].get("value", ""))
             if pickup_branch:
-                sel["value"] = pickup_branch
-                form = _all_form_inputs(doc)
-                form.append(("textButton", "Reservation abschicken"))
-                doc = self.html_post(self._opac_url(), form)
-                self._last_doc = doc
+                for o in opts:
+                    if pickup_branch.lower() in o.get_text().lower():
+                        branch_val = str(o.get("value", ""))
+                        break
+                if branch_val is None:
+                    return AccountResult(
+                        False, f"Ausgabeort '{pickup_branch}' nicht im Formular",
+                        details=[o.get_text().strip() for o in opts[:10]])
+            elif opts:
+                branch_val = str(opts[0].get("value", ""))
+        extra: dict[str, str] = {"$Button": "Weiter"}
+        if branch_val is not None:
+            extra["$Select"] = branch_val
+        extra["$Checkbox"] = "on" if express else ""
+        extra["$Checkbox$0"] = ""
+        extra["$Select$0"] = "Ja" if notify else "Nein"
+        confirm_doc = self._browser_post(order_doc, extra=extra)
+        self._last_doc = confirm_doc
+        body = confirm_doc.get_text(" ", strip=True)
+        fee = self._parse_order_fee(body)
+        if "Bestellinformation" not in body and not re.search(r"Geb.hren|Transport", body):
+            return AccountResult(False, "Bestätigungsseite nicht erreicht",
+                                 details=[body[:200]])
 
-        # fee warning / confirmation
-        if not confirm and (doc.select_one(".achtung") is not None
-                            or doc.select_one("#F23 .klein") is not None):
-            return AccountResult(False, "Kostenpflichtige Vormerkung — mit confirm=True bestätigen",
-                                 details=[doc.select_one(".achtung, #F23").get_text().strip()])
+        # cost guard: refuse when the quoted fee exceeds max_fee
+        if fee is not None and max_fee is not None and fee > max_fee:
+            return AccountResult(
+                False, f"Kosten {fee:.2f} EUR überschreiten max_fee={max_fee} — nicht bestellt",
+                details=[body[:300]])
 
-        # submit
-        form = _all_form_inputs(doc, include_submit_values=("Reservation abschicken",))
-        btn = doc.select_one('input[name="textButton"]')
-        if btn is not None:
-            form.append(("textButton", str(btn.get("value", "Reservation abschicken"))))
-        doc = self.html_post(self._opac_url(), form)
+        # fee warning → require confirm before the cost-bearing submit
+        cost_btn = confirm_doc.select_one(
+            'input[value*="kostenpflichtig bestellen"]')
+        if cost_btn is not None and not confirm:
+            fee_txt = f"{fee:.2f} EUR" if fee is not None else "?"
+            return AccountResult(
+                False,
+                f"Kostenpflichtige Bestellung ({fee_txt}) — mit confirm=True bestätigen",
+                details=[body[:300]])
 
-        msg_el = doc.select_one(".message h1, .msgpage h1, .hinweis")
-        msg = msg_el.get_text().strip() if msg_el else ""
-        if "ist erfolgt" in msg or "Vormerkung" in msg and "erfolgreich" in msg:
-            return AccountResult(True, msg)
-        if msg:
-            return AccountResult(False, msg)
-        return AccountResult(True, "Vormerkung abgeschickt")
+        final = self._browser_post(confirm_doc, extra={"$Button": "kostenpflichtig bestellen / vormerken"})
+        self._last_doc = final
+        fbody = final.get_text(" ", strip=True)
+        for marker in ("Der Bestellwunsch ist erfolgt", "Die Magazinbestellung ist erfolgt",
+                       "Der Bestellwunsch", "Die Magazinbestellung"):
+            i = fbody.find(marker)
+            if i >= 0:
+                return AccountResult(True, fbody[i:i + 180])
+        return AccountResult(False, "Bestellung nicht bestätigt",
+                             details=[fbody[:300]])
+
+    @staticmethod
+    def _parse_order_fee(body: str) -> float | None:
+        """Parse the quoted order cost from the confirmation page text.
+
+        Handles both phrasings seen live: "Bei Bereitstellung entstehen
+        Ihnen Gebühren in Höhe von 2.00 Euro" (express/order fee) and
+        "Der Transport kostet bei Bereitstellung 1.00 Euro" (magazine
+        transport). Returns EUR as float, or None if no cost is quoted.
+        """
+        m = re.search(r"(?:Geb.hren in H.he von|Transport kostet bei Bereitstellung|kostet bei Bereitstellung)\s*([\d.,]+)", body)
+        if not m:
+            return None
+        raw = m.group(1).replace(".", "").replace(",", ".") \
+            if m.group(1).count(",") == 1 and m.group(1).count(".") <= 1 else m.group(1).replace(",", ".")
+        try:
+            return float(raw.replace(" ", ""))
+        except ValueError:
+            return None
+
+    def _browser_post(self, base_doc: BeautifulSoup,
+                      selected_val: str | None = None,
+                      extra: dict[str, str] | None = None) -> BeautifulSoup:
+        """POST like the browser: hidden inputs of the current page plus
+        scriptEnabled/overrideScrollPos/$Autosuggest/$Select/$Tab and the
+        page's requestCount (identity/requestCount rotate per page)."""
+        data: dict[str, str] = {}
+        for inp in base_doc.select('input[type="hidden"]'):
+            n = str(inp.get("name") or "")
+            if n:
+                data[n] = str(inp.get("value") or "")
+        data["scriptEnabled"] = "true"
+        data["overrideScrollPos"] = "0"
+        auto = base_doc.select_one('input[name="$Autosuggest"]')
+        data["$Autosuggest"] = str(auto.get("value") or "") if auto else ""
+        sel = base_doc.select_one('select[name="$Select"]')
+        data["$Select"] = str(sel.get("value") or "Überall suchen") if sel else "Überall suchen"
+        data["$Tab"] = "0"
+        rc = base_doc.select_one('input[name="requestCount"]')
+        data["requestCount"] = str(rc.get("value") or "0") if rc else "0"
+        if selected_val:
+            data["selected"] = selected_val
+        if extra:
+            data.update(extra)
+        doc = self.html_post(self._opac_url(), [(k, v) for k, v in data.items()],
+                             referer=self._opac_url())
+        self._last_doc = doc
+        return doc
+
+    def _record_id(self, record_id_or_url: str) -> str:
+        """Extract the bare AK id from a URL or id (strip AK/SAK prefixes)."""
+        m = re.search(r"sp=SAK(\d+)", record_id_or_url)
+        if m:
+            return m.group(1)
+        rid = record_id_or_url
+        for prefix in ("AK", "SAK"):
+            if rid.startswith(prefix):
+                rid = rid[len(prefix):]
+                break
+        return rid
+
+    def _open_detail(self, rid: str) -> BeautifulSoup:
+        """Open the detail view for a record id via selected=ZTEXT AK<id>."""
+        base = self._last_doc or self._start_doc
+        assert base is not None, "keine Seiten-Basis für Detail-Aufruf"
+        data: dict[str, str] = {}
+        for inp in base.select('input[type="hidden"]'):
+            n = str(inp.get("name") or "")
+            if n:
+                data[n] = str(inp.get("value") or "")
+        data["scriptEnabled"] = "true"
+        data["overrideScrollPos"] = "0"
+        auto = base.select_one('input[name="$Autosuggest"]')
+        data["$Autosuggest"] = str(auto.get("value") or "") if auto else ""
+        sel = base.select_one('select[name="$Select"]')
+        data["$Select"] = str(sel.get("value") or "Überall suchen") if sel else "Überall suchen"
+        data["$Tab"] = "0"
+        rc = base.select_one('input[name="requestCount"]')
+        data["requestCount"] = str(rc.get("value") or "0") if rc else "0"
+        data["selected"] = f"ZTEXT       AK{rid}"
+        doc = self.html_post(self._opac_url(), [(k, v) for k, v in data.items()],
+                             referer=self._opac_url())
+        self._last_doc = doc
+        return doc
 
     def _detail_url(self, record_id_or_url: str) -> str:
         """Resolve a record id or URL to a fetchable detail URL (session-scoped)."""

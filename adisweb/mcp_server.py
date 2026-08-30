@@ -183,23 +183,35 @@ def _make_server():
     def reserve(record_id_or_url: str, ausweis: str, password: str,
                 library: str = DEFAULT_LIBRARY,
                 pickup_branch: str | None = None,
+                express: bool = False,
+                notify: bool = True,
                 confirm: bool = False) -> str:
-        """Place a reservation (Vormerkung) on a catalogue record.
+        """Place a reservation / order (Vormerkung / Bestellung).
 
         Args:
-            record_id_or_url: detail URL (from search results) or record id.
+            record_id_or_url: detail URL (from search results) or record id
+                (e.g. "AK34063780" or "34063780").
             ausweis: library card / user number.
             password: account password.
             library: library config name.
-            pickup_branch: optional Abholort option value (if the form asks).
-            confirm: set True to confirm a cost warning (kostenpflichtig).
+            pickup_branch: Abholort / delivery branch as shown in the order
+                form, e.g. "Friedrichshain-Kreuzberg: Familienbibliothek
+                Else Ury"; None keeps the form default.
+            express: check "Expressbestellung" (fast delivery, may incur
+                transport fees).
+            notify: notify on availability (Benachrichtigung bei
+                Bereitstellung), default True.
+            confirm: set True to submit the cost-bearing final button
+                ("kostenpflichtig bestellen / vormerken"). Without it the
+                fee warning is returned and nothing is ordered.
         Returns:
             JSON {"ok": bool, "message": str, "details": [...]}
         """
         client = _client_for(library)
         try:
             res = client.reserve(record_id_or_url, _account_for(ausweis, password),
-                                 pickup_branch=pickup_branch, confirm=confirm)
+                                 pickup_branch=pickup_branch, express=express,
+                                 notify=notify, confirm=confirm)
         except OpacError as e:
             raise ValueError(f"Reserve failed: {e}") from e
         return json.dumps(res.to_dict(), ensure_ascii=False)
