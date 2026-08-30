@@ -1,0 +1,6 @@
+{
+  "name": "Heilbronn_HS",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC04",
+  "encoding": "UTF-8"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Zuerich",
+  "baseurl": "https://katalog.pbz.ch/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC",
+  "encoding": "UTF-8"
+}

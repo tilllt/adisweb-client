@@ -1,0 +1,110 @@
+[
+  {
+    "library": "Aalen_HS",
+    "search": "Hochschule Aalen Bibliothek OPAC Katalog",
+    "candidates": [
+      {
+        "url": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC15",
+        "title": "Katalog der Hochschule Aalen - Online-Katalog | HS Aalen",
+        "status": 200,
+        "kind": "aDISWeb"
+      },
+      {
+        "url": "https://www.hs-aalen.de/de/pages/bibliothek_faqs-oder-bib-von-a-z",
+        "title": "Hochschule Aalen - Bibliothek",
+        "status": 404,
+        "kind": "error"
+      },
+      {
+        "url": "https://www.hs-aalen.de/en/departments-facilities/library/",
+        "title": "Bibliothek Aalen: Schnelleinstieg und Lernplatzreservierung",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://www.videlibri.de/bibliotheken.html",
+        "title": "Bibliothek-App VideLibri - Getestete Bibliotheken",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://www.stadtbibliothek-aalen.de/winbiap-der-katalog-der-bibliothek.185399.242.htm",
+        "title": "WinBIAP - der Katalog der Bibliothek - Stadtbibliothek Aalen",
+        "status": 200,
+        "kind": "other-opac"
+      }
+    ]
+  },
+  {
+    "library": "Freiburg_UB",
+    "search": "Universitätsbibliothek Freiburg Katalog OPAC",
+    "candidates": [
+      {
+        "url": "https://katalog.ub.uni-freiburg.de/opac/",
+        "title": "Katalog plus - Universitätsbibliothek Freiburg",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://katalog.ub.uni-freiburg.de/opac/RDSProxy/Home",
+        "title": "Artikel & mehr - Katalog plus - Universitätsbibliothek Freiburg",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://www.ub.uni-freiburg.de/index.php?id=opacinfo",
+        "title": "Universitätsbibliothek Freiburg: Über den Katalog plus",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://www.ub.uni-freiburg.de/en/",
+        "title": "Universitätsbibliothek Freiburg: Universitätsbibliothek Freiburg",
+        "status": 200,
+        "kind": "other-opac"
+      },
+      {
+        "url": "https://www.ub.uni-freiburg.de/en/search-borrow/",
+        "title": "Universitätsbibliothek Freiburg: Search & Borrow",
+        "status": 200,
+        "kind": "aDISWeb"
+      }
+    ]
+  },
+  {
+    "library": "Furtwangen_HS",
+    "search": "Hochschule Furtwangen Bibliothek Katalog OPAC",
+    "candidates": [
+      {
+        "url": "https://www.hs-furtwangen.de/zukunft-erleben/warum-hfu/bibliotheken",
+        "title": "Bibliotheken unserer drei Standorte | Hochschule Furtwangen",
+        "status": 200,
+        "kind": "aDISWeb"
+      },
+      {
+        "url": "https://www.hs-furtwangen.de/bibliotheks-recherche/",
+        "title": "Bibliotheks-Recherche | Hochschule Furtwangen",
+        "status": 200,
+        "kind": "aDISWeb"
+      },
+      {
+        "url": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC29",
+        "title": "Katalog der Hochschule Furtwangen - Online-Katalog | HS Furtwangen",
+        "status": 200,
+        "kind": "aDISWeb"
+      },
+      {
+        "url": "https://www.hs-furtwangen.de/einrichtungen/bibliotheken/",
+        "title": "Bibliotheken | Hochschule Furtwangen",
+        "status": 200,
+        "kind": "aDISWeb"
+      },
+      {
+        "url": "https://sigel.staatsbibliothek-berlin.de/suche?isil=DE-Fn1",
+        "title": "DE-Fn1 - Deutsche ISIL-Agentur - Staatsbibliothek zu Berlin",
+        "status": 200,
+        "kind": "other-opac"
+      }
+    ]
+  }
+]

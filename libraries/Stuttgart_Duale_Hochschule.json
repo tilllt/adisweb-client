@@ -1,0 +1,6 @@
+{
+  "name": "Stuttgart_Duale_Hochschule",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC41",
+  "encoding": "UTF-8"
+}

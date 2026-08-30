@@ -1,0 +1,6 @@
+{
+  "name": "Freiburg_UB",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC42",
+  "encoding": "UTF-8"
+}

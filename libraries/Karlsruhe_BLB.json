@@ -1,0 +1,6 @@
+{
+  "name": "Karlsruhe_BLB",
+  "baseurl": "https://blb.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC00",
+  "encoding": "UTF-8"
+}

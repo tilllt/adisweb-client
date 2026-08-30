@@ -1,0 +1,6 @@
+{
+  "name": "Muenchen",
+  "baseurl": "https://ssl.muenchen.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC",
+  "encoding": "UTF-8"
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "library": "Dormagen",
+    "found": {
+      "S127": "https://webopac.itk-rheinland.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23032"
+    }
+  },
+  {
+    "library": "Meerbusch",
+    "found": {
+      "SASTEC": "https://www.astec.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SASTEC&sp=SWI00005123",
+      "SWI00005123": "https://www.astec.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SASTEC&sp=SWI00005123",
+      "SMOPAC06": "https://mopac.itk-rheinland.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SMOPAC06"
+    }
+  },
+  {
+    "library": "Neuss",
+    "found": {
+      "SBN00000000": "https://webopac.itk-rheinland.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC02&sp=SBN00000000",
+      "SOPAC02": "https://webopac.itk-rheinland.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC02&sp=SBN00000000",
+      "SBK00000000": "https://webopac.itk-rheinland.de/aDISWeb/app/opac02?sp=SBK00000000",
+      "SWI02000292": "https://webopac.itk-rheinland.de/aDISWeb/app/opac02?sp=SWI02000292",
+      "S127": "https://webopac.itk-rheinland.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=S127.0.0.1:23022&amp=&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Dortmund",
+    "found": {
+      "SAK02814472": "https://katalog.dortmund.de/aDISWeb/app/opac02?sp=SAK02814472",
+      "SBK00000000": "https://katalog.dortmund.de/aDISWeb/app/opac02?sp=SBK00000000",
+      "SAKF": "https://katalog.dortmund.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC02&sp=SAKFreitext+Bibliothek+der+Dinge",
+      "SOPAC02": "https://katalog.dortmund.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC02&sp=SAKFreitext+Bibliothek+der+Dinge",
+      "S127": "https://katalog.dortmund.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=S127.0.0.1:24022"
+    }
+  },
+  {
+    "library": "Herne",
+    "found": {
+      "SOPAC": "https://katalog.herne.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC",
+      "S127": "https://katalog.herne.de/aDISWeb/app?noRedir=&service=direct%2F0%2FHome%2F%24DirectLink&sp=S127.0.0.1%3A4404"
+    }
+  },
+  {
+    "library": "Nuremberg_Bibliothek_des_Germanischen_Nationalmuseums",
+    "found": {
+      "SAK00628673": "https://webopac.gnm.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC&sp=SAK00628673",
+      "SOPAC": "https://webopac.gnm.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC&sp=SAK00628673"
+    }
+  },
+  {
+    "library": "Tuebingen_Uni",
+    "found": {
+      "SOPAC02": "https://tue.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=SOPAC02"
+    }
+  }
+]

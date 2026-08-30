@@ -1,0 +1,6 @@
+{
+  "name": "Tuebingen_Uni",
+  "baseurl": "https://tue.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC02",
+  "encoding": "UTF-8"
+}

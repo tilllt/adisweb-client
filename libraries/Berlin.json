@@ -1,0 +1,6 @@
+{
+  "name": "Berlin",
+  "baseurl": "https://www.voebb.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SPROD00",
+  "encoding": "UTF-8"
+}

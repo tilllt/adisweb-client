@@ -1,0 +1,6 @@
+{
+  "name": "Esslingen_HS",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC07",
+  "encoding": "UTF-8"
+}

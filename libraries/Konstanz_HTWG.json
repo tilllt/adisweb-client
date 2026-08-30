@@ -1,0 +1,6 @@
+{
+  "name": "Konstanz_HTWG",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC14",
+  "encoding": "UTF-8"
+}

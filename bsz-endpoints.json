@@ -1,0 +1,192 @@
+[
+  {
+    "library": "Aalen_HS",
+    "human": "Hochschule Aalen",
+    "symbolic": {
+      "SOPAC15": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC15&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Furtwangen_HS",
+    "human": "Hochschule Furtwangen",
+    "symbolic": {
+      "SOPAC29": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC29"
+    }
+  },
+  {
+    "library": "Heidelberg_PH",
+    "human": "Pädagogische Hochschule Heidelberg",
+    "symbolic": {
+      "SOPAC26": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC26"
+    }
+  },
+  {
+    "library": "Heilbronn_HS",
+    "human": "Hochschule Heilbronn",
+    "symbolic": {
+      "SOPAC04": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC04"
+    }
+  },
+  {
+    "library": "Konstanz_HTWG",
+    "human": "HTWG Konstanz",
+    "symbolic": {
+      "SOPAC14": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=SOPAC14"
+    }
+  },
+  {
+    "library": "Ludwigsburg_PH",
+    "human": "Pädagogische Hochschule Ludwigsburg",
+    "symbolic": {
+      "SOPAC03": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=SOPAC03"
+    }
+  },
+  {
+    "library": "Mannheim_HS",
+    "human": "Hochschule Mannheim",
+    "symbolic": {
+      "SOPAC24": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC24"
+    }
+  },
+  {
+    "library": "Mannheim_Muho",
+    "human": "Musikhochschule Mannheim",
+    "symbolic": {
+      "SOPAC11": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC11",
+      "SOPAC24": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC24"
+    }
+  },
+  {
+    "library": "Offenburg_HS",
+    "human": "Hochschule Offenburg",
+    "symbolic": {
+      "SOPAC02": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC02",
+      "SOPAC06": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC06"
+    }
+  },
+  {
+    "library": "Pforzheim_HS",
+    "human": "Hochschule Pforzheim",
+    "symbolic": {
+      "SOPAC25": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC25"
+    }
+  },
+  {
+    "library": "Reutlingen_Hochschulbibliothek",
+    "human": "Hochschule Reutlingen",
+    "symbolic": {
+      "SOPAC31": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC31&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Schwaebisch_Gmuend_Paedagogische_Hochschule",
+    "human": "Pädagogische Hochschule Schwäbisch Gmünd",
+    "symbolic": {
+      "SOPAC23": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=SOPAC23&amp=&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Stuttgart_HdM",
+    "human": "Hochschule der Medien Stuttgart",
+    "symbolic": {
+      "SOPAC21": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC21"
+    }
+  },
+  {
+    "library": "Stuttgart_HfT",
+    "human": "Hochschule für Technik Stuttgart",
+    "symbolic": {
+      "SOPAC13": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC13"
+    }
+  },
+  {
+    "library": "Stuttgart_Muho",
+    "human": "Musikhochschule Stuttgart",
+    "symbolic": {
+      "SOPAC35": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC35",
+      "SOPAC41": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC41",
+      "SOPAC48": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC48"
+    }
+  },
+  {
+    "library": "Trossingen_Muho",
+    "human": "Musikhochschule Trossingen",
+    "symbolic": {
+      "SOPAC34": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC34"
+    }
+  },
+  {
+    "library": "Weingarten_HS",
+    "human": "Pädagogische Hochschule Weingarten",
+    "symbolic": {
+      "SOPAC16": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&amp=&sp=SOPAC16"
+    }
+  },
+  {
+    "library": "Mannheim_Duale_Hochschule",
+    "human": "DHBW Mannheim",
+    "symbolic": {
+      "SOPAC43": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC43"
+    }
+  },
+  {
+    "library": "Mosbach_DHBW",
+    "human": "DHBW Mosbach",
+    "symbolic": {
+      "SOPAC10": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC10"
+    }
+  },
+  {
+    "library": "Nuertingen_HfWU",
+    "human": "HfWU Nürtingen",
+    "symbolic": {
+      "SOPAC05": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC05&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Ravensburg_DHBW",
+    "human": "DHBW Ravensburg",
+    "symbolic": {
+      "SOPAC12": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC12"
+    }
+  },
+  {
+    "library": "Loerrach_DHBW",
+    "human": "DHBW Lörrach",
+    "symbolic": {
+      "SOPAC18": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC18"
+    }
+  },
+  {
+    "library": "Freiburg_UB",
+    "human": "Universitätsbibliothek Freiburg",
+    "symbolic": {
+      "SOPAC42": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC42",
+      "SOPAC50": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC50"
+    }
+  },
+  {
+    "library": "Stuttgart_WLB",
+    "human": "Württembergische Landesbibliothek",
+    "symbolic": {
+      "SOPAC00": "https://wlb.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC00",
+      "SOPAC49": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC49",
+      "SOPAC48": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC48"
+    }
+  },
+  {
+    "library": "Tuebingen_Uni",
+    "human": "Universitätsbibliothek Tübingen",
+    "symbolic": {
+      "SOPAC00": "https://tue.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC00&sp=SBK00000000"
+    }
+  },
+  {
+    "library": "Ulm_Uni",
+    "human": "Universitätsbibliothek Ulm",
+    "symbolic": {
+      "SOPAC32": "https://bsz.ibs-bw.de/aDISWeb/app?service=direct%2F0%2FHome%2F%24DirectLink&sp=SOPAC32",
+      "SOPAC00": "https://ulm.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC00"
+    }
+  }
+]

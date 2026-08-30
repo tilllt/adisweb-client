@@ -1,0 +1,6 @@
+{
+  "name": "Nuernberg",
+  "baseurl": "https://online-service2.nuernberg.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=Sapp1%3A4103",
+  "encoding": "UTF-8"
+}

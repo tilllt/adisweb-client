@@ -1,0 +1,6 @@
+{
+  "name": "Ulm_Uni",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC32",
+  "encoding": "UTF-8"
+}

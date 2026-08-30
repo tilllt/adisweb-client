@@ -1,0 +1,6 @@
+{
+  "name": "Ludwigsburg_PH",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC03",
+  "encoding": "UTF-8"
+}

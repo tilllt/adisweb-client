@@ -1,0 +1,416 @@
+[
+  {
+    "library": "Aalen_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 7795,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1872
+  },
+  {
+    "library": "Berlin",
+    "status": "OK",
+    "hits": 22,
+    "total": 1190992,
+    "detail": "parsed 22 hits",
+    "sample": "Berlin  Aleš Šteger. - Studentska Zalozba 2007",
+    "ms": 4557
+  },
+  {
+    "library": "Dormagen",
+    "status": "OK",
+    "hits": 22,
+    "total": 4500,
+    "detail": "parsed 22 hits",
+    "sample": "00-Laschet  2026 David Safier. - 1. Auflage, Originalausgabe. - ROWOHLT Kindler",
+    "ms": 2255
+  },
+  {
+    "library": "Dortmund",
+    "status": "OK",
+    "hits": 22,
+    "total": 19603,
+    "detail": "parsed 22 hits",
+    "sample": "Von Beuys bis Stella : internationale Graphik des letzten Jahrzehnts im Berliner",
+    "ms": 3046
+  },
+  {
+    "library": "Duesseldorf",
+    "status": "OK",
+    "hits": 22,
+    "total": 8733,
+    "detail": "parsed 22 hits",
+    "sample": "ALMANCI-Mädchen : Wie ich mir Deutschsein beigebracht habe | Tülin Sezgin (aka »",
+    "ms": 2069
+  },
+  {
+    "library": "Esslingen_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 9303,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1865
+  },
+  {
+    "library": "Freiburg_UB",
+    "status": "OK",
+    "hits": 22,
+    "total": 14697,
+    "detail": "parsed 22 hits",
+    "sample": "1989 - der unvollendete Aufbruch : die Revolution und ihre Gegenwart  2026 Andre",
+    "ms": 1917
+  },
+  {
+    "library": "Furtwangen_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 13557,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1938
+  },
+  {
+    "library": "Grevenbroich",
+    "status": "OK",
+    "hits": 22,
+    "total": 1337,
+    "detail": "parsed 22 hits",
+    "sample": "00-Laschet  2026 David Safier. - 1. Auflage, Originalausgabe. - ROWOHLT Kindler",
+    "ms": 2937
+  },
+  {
+    "library": "Heidelberg_PH",
+    "status": "OK",
+    "hits": 22,
+    "total": 9260,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 2050
+  },
+  {
+    "library": "Heilbronn_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 15385,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1877
+  },
+  {
+    "library": "Herne",
+    "status": "OK",
+    "hits": 22,
+    "total": 3240,
+    "detail": "parsed 22 hits",
+    "sample": "1999 Meter über dem Meer : Roman  2026 Caroline Wahl. - 1. Auflage. - Rowohlt",
+    "ms": 4178
+  },
+  {
+    "library": "Karlsruhe_BLB",
+    "status": "OK",
+    "hits": 22,
+    "total": 32000,
+    "detail": "parsed 22 hits",
+    "sample": "„Auf meinem Namen sitzt die Laus“ – Günter Bruno Fuchs (1928–1977) : Dokumentati",
+    "ms": 2631
+  },
+  {
+    "library": "Karlsruhe_Muho",
+    "status": "OK",
+    "hits": 22,
+    "total": 2450,
+    "detail": "parsed 22 hits",
+    "sample": "Deutsche Volkslieder demokratischen Charakters aus sechs Jahrhunderten : 2 Bände",
+    "ms": 1779
+  },
+  {
+    "library": "Konstanz_HTWG",
+    "status": "OK",
+    "hits": 22,
+    "total": 16481,
+    "detail": "parsed 22 hits",
+    "sample": "Klausurenkurs zum BGB : Allgemeiner Teil  2027 von Dr. iur. Karl-Heinz Fezer (Un",
+    "ms": 2037
+  },
+  {
+    "library": "Loerrach_DHBW",
+    "status": "OK",
+    "hits": 22,
+    "total": 5975,
+    "detail": "parsed 22 hits",
+    "sample": "Agile Unternehmensführung durch Selbstorganisation : Der Selbstorganisations-Kom",
+    "ms": 1912
+  },
+  {
+    "library": "Ludwigsburg_PH",
+    "status": "OK",
+    "hits": 22,
+    "total": 9048,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1936
+  },
+  {
+    "library": "Mannheim_Duale_Hochschule",
+    "status": "OK",
+    "hits": 22,
+    "total": 14269,
+    "detail": "parsed 22 hits",
+    "sample": "Dienstleistung und Produktion  2050 Ruth Melzer-Ridinger, Alexander Neumann. - 2",
+    "ms": 2793
+  },
+  {
+    "library": "Mannheim_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 14069,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 2089
+  },
+  {
+    "library": "Mannheim_Muho",
+    "status": "OK",
+    "hits": 22,
+    "total": 3617,
+    "detail": "parsed 22 hits",
+    "sample": "Digital Concert Hall - 2026 Europakonzert from Turku with Kirill Petrenko and Le",
+    "ms": 1724
+  },
+  {
+    "library": "Meerbusch",
+    "status": "OK",
+    "hits": 22,
+    "total": 4500,
+    "detail": "parsed 22 hits",
+    "sample": "00-Laschet  2026 David Safier. - 1. Auflage, Originalausgabe. - ROWOHLT Kindler",
+    "ms": 2252
+  },
+  {
+    "library": "Mosbach_DHBW",
+    "status": "OK",
+    "hits": 22,
+    "total": 11246,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1914
+  },
+  {
+    "library": "Muenchen",
+    "status": "OK",
+    "hits": 22,
+    "total": 1,
+    "detail": "parsed 22 hits",
+    "sample": "CADDY, D.: Great Composers in Words and Music - Wolfgang Amadeus Mozart  2024 Wo",
+    "ms": 3935
+  },
+  {
+    "library": "Neuss",
+    "status": "OK",
+    "hits": 22,
+    "total": 4500,
+    "detail": "parsed 22 hits",
+    "sample": "00-Laschet  2026 David Safier. - 1. Auflage, Originalausgabe. - ROWOHLT Kindler",
+    "ms": 2226
+  },
+  {
+    "library": "Nuernberg",
+    "status": "OK",
+    "hits": 22,
+    "total": 1,
+    "detail": "parsed 22 hits",
+    "sample": "Die specielle Therapie : nach den hinterlassenen Papieren des verstorbenen D. Au",
+    "ms": 1984
+  },
+  {
+    "library": "Nuertingen_HfWU",
+    "status": "OK",
+    "hits": 22,
+    "total": 11091,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 4931
+  },
+  {
+    "library": "Nuremberg_Bibliothek_des_Germanischen_Nationalmuseums",
+    "status": "OK",
+    "hits": 22,
+    "total": 21898,
+    "detail": "parsed 22 hits",
+    "sample": "Rot wie Gold : In seinem neuen Film \"Träume aus Feuer\" erzählt Florian Illies vo",
+    "ms": 1515
+  },
+  {
+    "library": "Offenburg_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 20802,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1994
+  },
+  {
+    "library": "Pforzheim_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 19203,
+    "detail": "parsed 22 hits",
+    "sample": "Klausurenkurs zum BGB : Allgemeiner Teil  2027 von Dr. iur. Karl-Heinz Fezer (Un",
+    "ms": 1960
+  },
+  {
+    "library": "Ravensburg_DHBW",
+    "status": "OK",
+    "hits": 22,
+    "total": 10499,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1911
+  },
+  {
+    "library": "Regensburg",
+    "status": "OK",
+    "hits": 22,
+    "total": 2724,
+    "detail": "parsed 22 hits",
+    "sample": "Von allem anders - Unplugged No. 2  2025 Herbert Grönemeyer",
+    "ms": 1467
+  },
+  {
+    "library": "Reutlingen_Hochschulbibliothek",
+    "status": "OK",
+    "hits": 22,
+    "total": 15851,
+    "detail": "parsed 22 hits",
+    "sample": "Agile Unternehmensführung durch Selbstorganisation : Der Selbstorganisations-Kom",
+    "ms": 2097
+  },
+  {
+    "library": "Schwaebisch_Gmuend_Paedagogische_Hochschule",
+    "status": "OK",
+    "hits": 22,
+    "total": 10029,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1798
+  },
+  {
+    "library": "Stuttgart",
+    "status": "OK",
+    "hits": 22,
+    "total": 11776,
+    "detail": "parsed 22 hits",
+    "sample": "Miron Zownir : Berlin 1977-2025  2026 Urban Spree Books",
+    "ms": 3956
+  },
+  {
+    "library": "Stuttgart_Duale_Hochschule",
+    "status": "OK",
+    "hits": 22,
+    "total": 6505,
+    "detail": "parsed 22 hits",
+    "sample": "Agile Unternehmensführung durch Selbstorganisation : Der Selbstorganisations-Kom",
+    "ms": 1857
+  },
+  {
+    "library": "Stuttgart_HdM",
+    "status": "OK",
+    "hits": 22,
+    "total": 10202,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1897
+  },
+  {
+    "library": "Stuttgart_HfT",
+    "status": "OK",
+    "hits": 22,
+    "total": 6351,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 1854
+  },
+  {
+    "library": "Stuttgart_Muho",
+    "status": "OK",
+    "hits": 22,
+    "total": 3318,
+    "detail": "parsed 22 hits",
+    "sample": "Digital Concert Hall - 2026 Europakonzert from Turku with Kirill Petrenko and Le",
+    "ms": 1709
+  },
+  {
+    "library": "Stuttgart_Rathaus",
+    "status": "OK",
+    "hits": 22,
+    "total": 213,
+    "detail": "parsed 22 hits",
+    "sample": "Die Verwaltung : Zeitschrift für Verwaltungsrecht und Verwaltungswissenschaften.",
+    "ms": 2185
+  },
+  {
+    "library": "Stuttgart_Uni",
+    "status": "OK",
+    "hits": 22,
+    "total": 32000,
+    "detail": "parsed 22 hits",
+    "sample": "Goethe und die Slaven  2025 Peter Drews. - Wissenschaftlicher Verlag Berlin",
+    "ms": 5501
+  },
+  {
+    "library": "Stuttgart_WLB",
+    "status": "OK",
+    "hits": 22,
+    "total": 32000,
+    "detail": "parsed 22 hits",
+    "sample": "[Kommentar zum Bürgerlichen Gesetzbuch] J. von Staudingers Kommentar zum Bürgerl",
+    "ms": 8973
+  },
+  {
+    "library": "Trossingen_Muho",
+    "status": "OK",
+    "hits": 22,
+    "total": 1745,
+    "detail": "parsed 22 hits",
+    "sample": "Bach-Jahrbuch - Bach-Jahrbuch 2025. - 111. Jahrgang 2025  2026 hrsg. von der Neu",
+    "ms": 5621
+  },
+  {
+    "library": "Tuebingen_Uni",
+    "status": "OK",
+    "hits": 22,
+    "total": 32000,
+    "detail": "parsed 22 hits",
+    "sample": "Kleine Reisen : Lektüre für Reise-Dilettanten. - 2.  1786 [von Heinrich August O",
+    "ms": 9324
+  },
+  {
+    "library": "Ulm_Uni",
+    "status": "OK",
+    "hits": 22,
+    "total": 4159,
+    "detail": "parsed 22 hits",
+    "sample": "Agile Unternehmensführung durch Selbstorganisation : Der Selbstorganisations-Kom",
+    "ms": 1993
+  },
+  {
+    "library": "Weingarten_HS",
+    "status": "OK",
+    "hits": 22,
+    "total": 11580,
+    "detail": "parsed 22 hits",
+    "sample": "Das achtsame Kleinunternehmen : Einführung in eine weltanschaulich neutrale Acht",
+    "ms": 2422
+  },
+  {
+    "library": "Zuerich",
+    "status": "OK",
+    "hits": 22,
+    "total": 1367,
+    "detail": "parsed 22 hits",
+    "sample": "Am Ende der Wahrheit : Thriller  2026 Maximilian Ferreira Cress. - Atrium Verlag",
+    "ms": 1710
+  }
+]

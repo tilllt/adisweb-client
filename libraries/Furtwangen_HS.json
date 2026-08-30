@@ -1,0 +1,6 @@
+{
+  "name": "Furtwangen_HS",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC29",
+  "encoding": "UTF-8"
+}

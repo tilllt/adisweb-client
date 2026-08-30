@@ -1,0 +1,6 @@
+{
+  "name": "Stuttgart_Rathaus",
+  "baseurl": "https://opac.rbs.stuttgart.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPACR",
+  "encoding": "UTF-8"
+}

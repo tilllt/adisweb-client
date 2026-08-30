@@ -1,0 +1,6 @@
+{
+  "name": "Regensburg",
+  "baseurl": "https://srv17.regensburg.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC",
+  "encoding": "UTF-8"
+}

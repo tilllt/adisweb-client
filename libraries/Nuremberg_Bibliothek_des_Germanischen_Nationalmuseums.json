@@ -1,0 +1,6 @@
+{
+  "name": "Nuremberg_Bibliothek_des_Germanischen_Nationalmuseums",
+  "baseurl": "https://webopac.gnm.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC",
+  "encoding": "UTF-8"
+}

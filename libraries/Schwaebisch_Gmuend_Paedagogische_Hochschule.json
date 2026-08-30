@@ -1,0 +1,6 @@
+{
+  "name": "Schwaebisch_Gmuend_Paedagogische_Hochschule",
+  "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/%24DirectLink&sp=SOPAC23",
+  "encoding": "UTF-8"
+}

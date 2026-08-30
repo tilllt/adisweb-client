@@ -1,0 +1,6 @@
+{
+  "name": "Grevenbroich",
+  "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
+  "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23042",
+  "encoding": "UTF-8"
+}
