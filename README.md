@@ -117,9 +117,13 @@ Tools (12):
 - `cancel_reservation(media_key, ausweis, password)` — cancel a reservation
 
 Each tool call creates a fresh client session (stateless, safe for concurrent
-calls). Account/order tools need the credentials of the patron; ordering is
-live-verified on Berlin (VÖBB). Handshake + tools verified via
-`scripts/mcp_handshake_test.py`.
+calls). Account/order tools need the credentials of the patron.
+
+> **⚠️ Teststatus:** Die kompletten Konto-/Bestell-Funktionen (get_account,
+> get_loans, get_orders, reserve, prolong, cancel_reservation) sind **nur
+> für die VÖBB (Berlin) live getestet** — alle anderen Bibliotheken sind
+> nur für Suche/Detail/Verfügbarkeit verifiziert. Handshake + tools verified
+> via `scripts/mcp_handshake_test.py`.
 
 Register in Hermes:
 
@@ -191,13 +195,11 @@ Nuremberg_Bibliothek_des_Germanischen_Nationalmuseums, Regensburg, Zuerich
 **Feature coverage:**
 
 - **Search / detail / availability** — verified on all 46 libraries.
-- **Account (login, loans, orders, reservations, renewal)** — verified live
-  on **Berlin (VÖBB)** via the modern OIDC flow; other libraries use
-  cookie-session or classic login and should work, but are not
-  live-verified yet.
-- **Ordering (reserve with pickup branch / Expressbestellung /
-  Magazin-Bestellung)** — implemented for the modern VÖBB order form and
-  live-verified on Berlin; other aDISWeb layouts may differ.
+- **Account (login, loans, orders, reservations, renewal) und Bestellungen
+  (Express/Magazin/Ausgabeort)** — **nur für die VÖBB (Berlin) live
+  getestet und verifiziert**; für alle anderen Bibliotheken sind diese
+  Funktionen **nicht getestet** (die aDISWeb-Layouts können abweichen).
+  Andere Bibliotheken nutzen Cookie-Session oder klassischen Login.
 
 ## Tests
 
