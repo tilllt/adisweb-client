@@ -180,6 +180,25 @@ def _make_server():
         return json.dumps(data.to_dict(), ensure_ascii=False)
 
     @mcp.tool()
+    def get_loans(ausweis: str, password: str, library: str = DEFAULT_LIBRARY) -> str:
+        """List the patron's currently borrowed items (loans).
+
+        Args:
+            ausweis: library card / user number.
+            password: account password.
+            library: library config name.
+        Returns:
+            JSON array of loans: [{"title", "author", "media_type",
+                   "return_date", "prolongable"}, ...]
+        """
+        client = _client_for(library)
+        try:
+            loans = client.get_loans(_account_for(ausweis, password))
+        except OpacError as e:
+            raise ValueError(f"Loans fetch failed: {e}") from e
+        return json.dumps(loans, ensure_ascii=False)
+
+    @mcp.tool()
     def reserve(record_id_or_url: str, ausweis: str, password: str,
                 library: str = DEFAULT_LIBRARY,
                 pickup_branch: str | None = None,

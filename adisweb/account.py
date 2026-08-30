@@ -431,6 +431,13 @@ class AccountMixin:
 
         return data
 
+    def get_loans(self, account: Account) -> list[dict]:
+        """Return the patron's currently borrowed items as a list of dicts
+        (title, author, return_date, prolongable). Cheap variant of
+        get_account() that skips fees/reservations parsing."""
+        data = self.get_account(account)
+        return [l.to_dict() for l in data.lent]
+
     def _account_area_links(self, doc: BeautifulSoup) -> dict[str, str]:
         """Map account area names to their JS-button elements (modern VÖBB)."""
         areas: dict[str, str] = {}
