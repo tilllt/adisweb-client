@@ -96,26 +96,56 @@ from any MCP client (Hermes, Claude Desktop, …):
 .venv/bin/python -m adisweb.mcp_server
 ```
 
-Tools:
+Tools (12):
 
 - `list_libraries` — all configured libraries
 - `search(query, library="Berlin", area="Bibliotheksbestand")` — hit list as JSON
-- `search_availability(query, branch_filter=None, library="Berlin", area="Bibliotheksbestand")` — hit list with per-copy availability, optionally filtered by branch substring (e.g. "ZLB", "Else Ury", "Namik Kemal")
+- `search_availability(query, branch_filter=None, library="Berlin", area="Bibliotheksbestand")` — hit list with per-copy availability (branch, location, signature, status, return date), optionally filtered by branch substring (e.g. "ZLB", "Else Ury", "Namik Kemal"). Runs search + all detail fetches in ONE session (aDISWeb form state is session-bound)
 - `get_detail(record_id_or_url, library="Berlin")` — full record detail as JSON
 - `get_availability(record_id_or_url, library="Berlin")` — per-copy availability
-- `get_account(ausweis, password, library="Berlin")` — account overview: fees, validity, loans, reservations
-- `reserve(record_id_or_url, ausweis, password, pickup_branch=None, confirm=False)` — place a reservation / Vormerkung
-- `prolong(media_key, ausweis, password)` / `prolong_all(ausweis, password)` — renew loans
+- `get_account(ausweis, password, library="Berlin")` — account overview: pending fees, card validity, loans, reservations
+- `get_loans(ausweis, password, library="Berlin")` — currently borrowed items: title, author, media_type, return_date, prolongable
+- `get_orders(ausweis, password, library="Berlin")` — pending orders: `{"orders": [...], "magazine_orders": [...]}` (Bestellwünsche via *SZW, Magazin-Bestellungen via *SZB, each with branch/title/order timestamp)
+- `reserve(record_id_or_url, ausweis, password, pickup_branch=None, express=False, notify=True, confirm=False, max_fee=None)` — place an order / Vormerkung
+  - `pickup_branch`: delivery branch as shown in the order form, e.g. `"Friedrichshain-Kreuzberg: Familienbibliothek Else Ury"`
+  - `express`: check Expressbestellung (fast delivery, may incur transport fees)
+  - `notify`: notify on availability (default True)
+  - `confirm`: must be True to submit the cost-bearing final button ("kostenpflichtig bestellen / vormerken"); otherwise the quoted cost is returned and nothing is ordered
+  - `max_fee`: refuse the order when the quoted cost exceeds this amount (even with confirm=True). Cost detection covers both live phrasings: "Gebühren in Höhe von 2.00 Euro" (order fee) and "Transport kostet bei Bereitstellung 1.00 Euro" (magazine transport)
+- `prolong(media_key, ausweis, password)` — renew a single loan (key from get_loans/get_account)
+- `prolong_all(ausweis, password)` — renew all prolongable loans
 - `cancel_reservation(media_key, ausweis, password)` — cancel a reservation
 
 Each tool call creates a fresh client session (stateless, safe for concurrent
-calls). Handshake + tools verified via `scripts/mcp_handshake_test.py`.
+calls). Account/order tools need the credentials of the patron; ordering is
+live-verified on Berlin (VÖBB). Handshake + tools verified via
+`scripts/mcp_handshake_test.py`.
 
 Register in Hermes:
 
 ```bash
 hermes mcp add adisweb --command /abs/path/to/.venv/bin/python --args -m adisweb.mcp_server
 ```
+
+### MCP example workflow
+
+A full order cycle over the MCP tools (verified live on VÖBB):
+
+1. **Search** a title: `search(query="One Piece 86")` → hits with `id`
+   (e.g. `AK34063780`)
+2. **Check availability** per branch: `search_availability(query="One
+   Piece 86", branch_filter="Else Ury")` → copies with branch/location/
+   signature/status/return date
+3. **Place an order** (costs shown first, nothing ordered without
+   `confirm=True`):
+   `reserve(record_id_or_url="AK34063780", ausweis=…, password=…,
+   pickup_branch="Friedrichshain-Kreuzberg: Familienbibliothek Else Ury",
+   express=True, confirm=False)` → returns the quoted fee (e.g.
+   "Kostenpflichtige Bestellung (2.00 EUR)"); re-run with `confirm=True`
+   (+ optional `max_fee=5.0`) to actually order
+4. **Verify** in the account: `get_orders(ausweis=…, password=…)` →
+   `{"orders": [...], "magazine_orders": [...]}`; `get_loans(…)` for
+   borrowed items; `get_account(…)` for fees/validity
 
 ## Library configs
 

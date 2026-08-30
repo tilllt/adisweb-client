@@ -52,6 +52,73 @@
 - **Eingaben:** detail_url from a search result.
 - **Ergebnis:** per-copy availability rows without the full metadata.
 
+### Requirement: Tool `search_availability`
+
+- **Eingaben:** `query`, optional `branch_filter` (substring of branch name),
+  optional `library`, optional `area`.
+- **Ablauf:** `AdisClient.get_availability_by_query(query, branch_filter)` —
+  search + detail fetches in ONE session (aDISWeb form state is
+  session-bound; separate tool calls would break the identity/requestCount
+  chain).
+- **Ausgaben:** JSON list of `{id, title, copies:[{branch, location,
+  signature, status, return_date}]}`.
+
+#### Scenario: Which One Piece volumes are available at ZLB
+- **Akteure:** MCP client.
+- **Eingaben:** `search_availability(query="One Piece 86", branch_filter="ZLB")`.
+- **Ergebnis:** every hit with its ZLB copies incl. signature (e.g. "Ju 600
+  OnePie 1:86") and status ("Verfügbar"/"Ausgeliehen"/"Reserviert").
+
+### Requirement: Tool `get_loans`
+
+- **Eingaben:** `ausweis`, `password`, optional `library`.
+- **Ablauf:** `AdisClient.get_loans(account)`.
+- **Ausgaben:** JSON array of currently borrowed items (title, author,
+  media_type, return_date, prolongable).
+
+#### Scenario: What have we borrowed
+- **Akteure:** MCP client.
+- **Eingaben:** `get_loans(ausweis=…, password=…)`.
+- **Ergebnis:** 14 loans incl. One Piece volumes with due dates.
+
+### Requirement: Tool `get_orders`
+
+- **Eingaben:** `ausweis`, `password`, optional `library`.
+- **Ablauf:** `AdisClient.get_orders(account)` — opens the order areas via
+  `selected=ZTEXT *SZW` (Bestellwünsche) and `*SZB` (Magazin-Bestellungen),
+  reloading the overview between areas (identity/requestCount rotate).
+- **Ausgaben:** JSON `{"orders": [{branch, title, note}],
+  "magazine_orders": [{branch, title, note}]}`.
+
+#### Scenario: Pending orders overview
+- **Akteure:** MCP client.
+- **Eingaben:** `get_orders(ausweis=…, password=…)`.
+- **Ergebnis:** 3 Bestellwünsche (Else Ury) + 8 Magazin-Bestellungen (ZLB)
+  with order timestamps.
+
+### Requirement: Tool `reserve` (extended)
+
+- **Eingaben:** `record_id_or_url`, `ausweis`, `password`, optional
+  `pickup_branch`, `express`, `notify`, `confirm`, `max_fee`, `library`.
+- **Ablauf:** login → search by bare id → detail (`selected=ZTEXT AK<id>`)
+  → "Bestellen/Vormerken" → order form (pickup branch `$Select`,
+  Expressbestellung `$Checkbox`, notification `$Select$0`) → "Weiter" →
+  cost page → final "kostenpflichtig bestellen / vormerken" submit.
+- **Ausgaben:** JSON `{ok, message, details}`.
+- **Sicherheit:** `confirm=False` (default) returns the quoted cost without
+  ordering; `max_fee` refuses orders exceeding the cap even with
+  `confirm=True`. Cost parsing handles "Gebühren in Höhe von 2.00 Euro"
+  (order fee) and "Transport kostet bei Bereitstellung 1.00 Euro"
+  (magazine transport).
+
+#### Scenario: Express order to Else Ury
+- **Akteure:** MCP client.
+- **Eingaben:** `reserve("AK34063780", ausweis=…, password=…,
+  pickup_branch="Friedrichshain-Kreuzberg: Familienbibliothek Else Ury",
+  express=True, confirm=False)`.
+- **Ergebnis:** "Kostenpflichtige Bestellung (2.00 EUR) — mit confirm=True
+  bestätigen"; nothing ordered.
+
 ### Requirement: stdio transport
 
 - **Ablauf:** run `python -m adisweb.mcp_server`; MCP over stdin/stdout (JSON-RPC).
