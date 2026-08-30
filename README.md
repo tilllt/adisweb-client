@@ -136,6 +136,39 @@ Configs were imported from
 (BSZ symbolic `sp=SOPACxx` names, itk-rheinland, …). Add your own library by
 dropping a JSON file into `libraries/`.
 
+## Library compatibility
+
+All **46** bundled library configs were live-verified against the real OPACs
+(see [COMPATIBILITY.md](COMPATIBILITY.md) and `libraries-scan.json` for the
+full report):
+
+**BSZ consortium (Baden-Württemberg, ~24):** Aalen_HS, Esslingen_HS,
+Freiburg_UB, Furtwangen_HS, Heidelberg_PH, Heilbronn_HS, Karlsruhe_BLB,
+Karlsruhe_Muho, Konstanz_HTWG, Loerrach_DHBW, Ludwigsburg_PH,
+Mannheim_Duale_Hochschule, Mannheim_HS, Mannheim_Muho, Mosbach_DHBW,
+Nuertingen_HfWU, Offenburg_HS, Pforzheim_HS, Ravensburg_DHBW,
+Reutlingen_Hochschulbibliothek, Schwaebisch_Gmuend_Paedagogische_Hochschule,
+Stuttgart, Stuttgart_Duale_Hochschule, Stuttgart_HdM, Stuttgart_HfT,
+Stuttgart_Muho, Stuttgart_Rathaus, Stuttgart_Uni, Stuttgart_WLB,
+Trossingen_Muho, Tuebingen_Uni, Ulm_Uni, Weingarten_HS
+
+**itk-rheinland:** Dormagen, Dortmund, Duesseldorf, Grevenbroich, Meerbusch,
+Neuss
+
+**Other:** Berlin (VÖBB), Herne, Muenchen, Nuernberg,
+Nuremberg_Bibliothek_des_Germanischen_Nationalmuseums, Regensburg, Zuerich
+
+**Feature coverage:**
+
+- **Search / detail / availability** — verified on all 46 libraries.
+- **Account (login, loans, orders, reservations, renewal)** — verified live
+  on **Berlin (VÖBB)** via the modern OIDC flow; other libraries use
+  cookie-session or classic login and should work, but are not
+  live-verified yet.
+- **Ordering (reserve with pickup branch / Expressbestellung /
+  Magazin-Bestellung)** — implemented for the modern VÖBB order form and
+  live-verified on Berlin; other aDISWeb layouts may differ.
+
 ## Tests
 
 ```bash
