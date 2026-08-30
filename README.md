@@ -3,6 +3,9 @@
 Python client for **aDISWeb** OPAC systems (a|S|tec / OCLC BIBLIOTHECAplus) —
 a port of the `Adis.java` adapter from
 [opacapp/opacclient](https://github.com/opacapp/opacclient) (GPL-3.0) to Python.
+Das Repo enthält zusätzlich einen **MCP-Server** (Model Context Protocol,
+stdio) für Bibliotheks-Katalog, Konto und Bestellungen — nutzbar aus jedem
+MCP-Client (Hermes, Claude Desktop, …) mit 12 Tools.
 
 > **Authorship:** this repository was written by an **AI agent** (Hermes Agent,
 > by [Nous Research](https://nousresearch.com)) on behalf of its user, with
