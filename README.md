@@ -61,6 +61,32 @@ CLI scan over all configured libraries:
 .venv/bin/python scripts/scan_libraries.py --json
 ```
 
+## MCP server
+
+The client ships as an MCP (Model Context Protocol) stdio server — usable
+from any MCP client (Hermes, Claude Desktop, …):
+
+```bash
+.venv/bin/pip install -e ".[mcp]"
+.venv/bin/python -m adisweb.mcp_server
+```
+
+Tools:
+
+- `list_libraries` — all configured libraries
+- `search(query, library="Berlin", area="Bibliotheksbestand")` — hit list as JSON
+- `get_detail(record_id_or_url, library="Berlin")` — full record detail as JSON
+- `get_availability(record_id_or_url, library="Berlin")` — per-copy availability
+
+Each tool call creates a fresh client session (stateless, safe for concurrent
+calls). Handshake + tools verified via `scripts/mcp_handshake_test.py`.
+
+Register in Hermes:
+
+```bash
+hermes mcp add adisweb --command /abs/path/to/.venv/bin/python --args -m adisweb.mcp_server
+```
+
 ## Library configs
 
 Each library is a JSON file under `libraries/`:

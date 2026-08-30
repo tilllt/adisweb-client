@@ -1,6 +1,6 @@
 # Change 001: Python client port of Adis.java
 
-**Status:** In Progress
+**Status:** Archived (auf specs/ angewendet, 2026-08-30)
 **Datum:** 2026-08-30
 
 ## Why

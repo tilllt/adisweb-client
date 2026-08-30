@@ -121,3 +121,55 @@ class SearchRequestResult:
     results: list[SearchResult] = field(default_factory=list)
     total_result_count: int = -1
     page: int = 1
+
+
+# ---------------------------------------------------------------- JSON helpers
+
+
+def _media_type_name(mt: MediaType) -> str:
+    return mt.name if isinstance(mt, MediaType) else str(mt)
+
+
+def _status_name(st: Status) -> str:
+    return st.name if isinstance(st, Status) else str(st)
+
+
+def search_result_to_dict(r: SearchResult) -> dict:
+    return {
+        "nr": r.nr,
+        "id": r.id,
+        "title": r.innerhtml,
+        "type": _media_type_name(r.type),
+        "status": _status_name(r.status),
+        "cover": r.cover,
+        "detail_url": r.detail_url,
+    }
+
+
+def detail_to_dict(d: DetailedItem) -> dict:
+    return {
+        "id": d.id,
+        "title": d.title,
+        "cover": d.cover,
+        "reservable": d.reservable,
+        "reservation_info": d.reservation_info,
+        "details": [
+            {"title": x.title, "content": x.content, "url": x.url}
+            for x in d.details
+        ],
+        "copies": copies_to_dict(d.copies),
+    }
+
+
+def copies_to_dict(copies: list[Copy]) -> list[dict]:
+    return [
+        {
+            "branch": c.branch,
+            "location": c.location,
+            "signature": c.signature,
+            "status": c.status,
+            "return_date": c.return_date.isoformat() if c.return_date else None,
+            "url": c.url,
+        }
+        for c in copies
+    ]
