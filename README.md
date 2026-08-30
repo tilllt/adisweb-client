@@ -124,6 +124,13 @@ calls). Account/order tools need the credentials of the patron.
 > für die VÖBB (Berlin) live getestet** — alle anderen Bibliotheken sind
 > nur für Suche/Detail/Verfügbarkeit verifiziert. Handshake + tools verified
 > via `scripts/mcp_handshake_test.py`.
+>
+> **🤝 Mitwirken:** Wir freuen uns über **Pull Requests und Verifikationen
+> der Konto-/Bestell-Funktionen für andere Bibliotheken**! Wenn du eine
+> aDISWeb-Bibliothek nutzt (z.B. Stuttgart, München, Zürich, Herne, …) und
+> die Account-Funktionen dort testest, reiche gerne einen PR ein — mit
+> Config-Update (falls nötig), Testergebnis und ggf. Code-Anpassungen für
+> abweichende Layouts. Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Register in Hermes:
 
