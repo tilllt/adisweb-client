@@ -438,6 +438,67 @@ class AccountMixin:
         data = self.get_account(account)
         return [l.to_dict() for l in data.lent]
 
+    def get_orders(self, account: Account) -> dict:
+        """Return the patron's pending orders (Bestellwünsche, Magazin-
+        Bestellungen) as parsed dicts.
+
+        Verifies the account overview first, then opens the order areas via
+        the selected=ZTEXT *SZW / *SZB POST targets (modern VÖBB).
+        """
+        if not self._cookie_session and not self._session_sid:
+            self.login(account)
+        doc = self._last_doc or self._start_doc
+        assert doc is not None
+        result: dict = {"orders": [], "magazine_orders": []}
+
+        def _parse_table(adoc: BeautifulSoup) -> list[dict]:
+            rows = []
+            for tr in adoc.select(".rTable_div tbody tr, table.rTable_table tbody tr"):
+                tds = tr.find_all(recursive=False)
+                if len(tds) < 3:
+                    continue
+                texts = [td.get_text(" ", strip=True) for td in tds]
+                # column layout (VÖBB): 0=Markieren checkbox, 1=Zeile(n)
+                # je nach Bereich: Ausgabeort/Titel/Hinweis — skip "Markieren"
+                if texts[0].strip() == "Markieren":
+                    texts = texts[1:]
+                rows.append({
+                    "branch": texts[0],
+                    "title": texts[1] if len(texts) > 1 else "",
+                    "note": texts[2] if len(texts) > 2 else "",
+                })
+            return rows
+
+        # area POSTs: each request rotates identity/requestCount AND the
+        # order-area pages don't accept a different selected= code. Mirror
+        # the browser: reload the overview before each area click.
+        current = doc
+        for area, key in (("orders", "orders"), ("magazine_orders", "magazine_orders")):
+            # reload the overview fresh (new identity/requestCount) unless
+            # this is the first area and we already sit on the overview
+            if current is not doc:
+                current = self._reload_overview()
+            code = self._AREA_SELECTED[area]
+            form = [(n, v) for n, v in self._form_payload(current)]
+            form = [(n, code if n == "selected" else v) for n, v in form]
+            try:
+                adoc = self.html_post(self._opac_url(), form)
+            except OpacError:
+                continue
+            current = adoc
+            result[key] = _parse_table(adoc)
+        return result
+
+    def _reload_overview(self) -> BeautifulSoup:
+        """Reload the account overview (fresh identity/requestCount) for
+        post-login (OIDC) sessions; falls back to the cookie-session path."""
+        if self._session_sid:
+            doc = self.html_get(f"https://{self._netloc}/aDISWeb/_{self._session_sid}/app/prod00/1")
+        else:
+            doc = self._account_overview_doc()
+        self._last_doc = doc
+        return doc
+
     def _account_area_links(self, doc: BeautifulSoup) -> dict[str, str]:
         """Map account area names to their JS-button elements (modern VÖBB)."""
         areas: dict[str, str] = {}
@@ -454,8 +515,10 @@ class AccountMixin:
     # area POST targets: modern VÖBB uses selected=ZTEXT *<CODE>
     _AREA_SELECTED = {
         "lent": "ZTEXT       *SZA",
-        "reservations": "ZTEXT       *SVE",
+        "reservations": "ZTEXT       *SZM",
         "fees": "ZTEXT       *SGG",
+        "orders": "ZTEXT       *SZW",        # Bestellwünsche
+        "magazine_orders": "ZTEXT       *SZB",  # Bestellungen (Magazin)
     }
 
     def _open_account_area(self, element_id: str, area_name: str | None = None,
