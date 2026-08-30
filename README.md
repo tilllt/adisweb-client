@@ -141,6 +141,10 @@ Register in Hermes:
 hermes mcp add adisweb --command /abs/path/to/.venv/bin/python --args -m adisweb.mcp_server
 ```
 
+**Claude Desktop / Claude Code / ChatGPT:** Schritt-für-Schritt-Anleitungen
+für diese Clients (inkl. Remote-MCP für ChatGPT) findest du in
+[MCP_CLIENTS.md](MCP_CLIENTS.md).
+
 ### MCP example workflow
 
 A full order cycle over the MCP tools (verified live on VÖBB):
